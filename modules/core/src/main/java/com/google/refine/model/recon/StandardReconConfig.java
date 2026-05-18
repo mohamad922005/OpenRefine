@@ -61,6 +61,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.refine.ProjectManager;
 import com.google.refine.expr.ExpressionUtils;
 import com.google.refine.model.Cell;
 import com.google.refine.model.Project;
@@ -739,17 +740,19 @@ public class StandardReconConfig extends ReconConfig {
         return common / longWords.size();
     }
 
-    static final protected Set<String> s_stopWords = new HashSet<String>();
+    static final protected Set<String> s_stopWords = new HashSet<>();
+
     static {
-        // FIXME: This is English specific - needs i18n
-        s_stopWords.add("the");
-        s_stopWords.add("a");
-        s_stopWords.add("and");
-        s_stopWords.add("of");
-        s_stopWords.add("on");
-        s_stopWords.add("in");
-        s_stopWords.add("at");
-        s_stopWords.add("by");
+        String stopwordsPreference =
+                "the,a,and,of,on,in,at,by";
+
+        for (String stopword : stopwordsPreference.split(",")) {
+            stopword = stopword.trim();
+
+            if (!stopword.isEmpty()) {
+                s_stopWords.add(stopword);
+            }
+        }
     }
 
     static protected Set<String> breakWords(String s) {
